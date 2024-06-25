@@ -1,0 +1,19 @@
+[package]
+name = "coppo"
+version = "0.0.1-alpha"
+edition = "2021"
+authors = ["hacbit <hacbit@foxmail.com>"]
+license = "MIT"
+
+[workspace]
+members = [
+    "lib/coppo-addons",
+    "lib/coppo-cli",
+    "lib/coppo-config",
+    "lib/coppo-new",
+]
+
+[dependencies]
+clap = "4.5.7"
+coppo-cli = { path = "lib/coppo-cli" }
+coppo-new = { path = "lib/coppo-new" }

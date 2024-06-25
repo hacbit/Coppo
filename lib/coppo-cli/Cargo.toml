@@ -1,0 +1,8 @@
+[package]
+name = "coppo-cli"
+version = "0.0.1-alpha"
+edition = "2021"
+
+[dependencies]
+coppo-addons = { path = "../coppo-addons" }
+coppo-config = { path = "../coppo-config" }
