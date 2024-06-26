@@ -112,7 +112,6 @@ macro_rules! impl_addon {
     (
         $addon:ty,
         name => $name:expr,
-        $(description => $description:expr,)?
         $(args => [$($args:expr),*$(,)?],)?
         run => |$config:ident, $matches:ident| $run:block$(,)?
     ) => {
@@ -125,9 +124,9 @@ macro_rules! impl_addon {
                 env!("CARGO_PKG_VERSION")
             }
 
-            $(fn description(&self) -> Option<&'static str> {
-                Some($description)
-            })?
+            fn description(&self) -> Option<&'static str> {
+                Some(env!("CARGO_PKG_DESCRIPTION"))
+            }
 
             $(fn args(&self) -> Vec<Arg> {
                 vec![$($args),*]
@@ -143,7 +142,6 @@ macro_rules! impl_addon {
         $addon:ty,
         name => $name:expr,
         version => $version:expr,
-        $(description => $description:expr,)?
         $(args => [$($args:expr),*$(,)?],)?
         run => |$config:ident, $matches:ident| $run:block$(,)?
     ) => {
@@ -156,9 +154,71 @@ macro_rules! impl_addon {
                 $version
             }
 
-            $(fn description(&self) -> Option<&'static str> {
-                Some($description)
+            fn description(&self) -> Option<&'static str> {
+                Some(env!("CARGO_PKG_DESCRIPTION"))
+            }
+
+            $(fn args(&self) -> Vec<Arg> {
+                vec![$($args),*]
             })?
+
+            fn run(&self, config: &mut Config, matches: &ArgMatches) -> AddonResult {
+                $run(config, matches);
+                Ok(())
+            }
+        }
+    };
+    (
+        $addon:ty,
+        name => $name:expr,
+        $(version => $version:expr,)?
+        description => $description:expr,
+        $(args => [$($args:expr),*$(,)?],)?
+        run => |$config:ident, $matches:ident| $run:block$(,)?
+    ) => {
+        impl Addon for $addon {
+            fn name(&self) -> &'static str {
+                $name
+            }
+
+            fn version(&self) -> &'static str {
+                env!("CARGO_PKG_VERSION")
+            }
+
+            fn description(&self) -> Option<&'static str> {
+                Some($description)
+            }
+
+            $(fn args(&self) -> Vec<Arg> {
+                vec![$($args),*]
+            })?
+
+            fn run(&self, $config: &mut Config, $matches: &ArgMatches) -> AddonResult {
+                $run($config, $matches);
+                Ok(())
+            }
+        }
+    };
+    (
+        $addon:ty,
+        name => $name:expr,
+        version => $version:expr,
+        description => $description:expr,
+        $(args => [$($args:expr),*$(,)?],)?
+        run => |$config:ident, $matches:ident| $run:block$(,)?
+    ) => {
+        impl Addon for $addon {
+            fn name(&self) -> &'static str {
+                $name
+            }
+
+            fn version(&self) -> &'static str {
+                $version
+            }
+
+            fn description(&self) -> Option<&'static str> {
+                Some($description)
+            }
 
             $(fn args(&self) -> Vec<Arg> {
                 vec![$($args),*]

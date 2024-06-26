@@ -1,5 +1,5 @@
 //! Parse the configuration file.
-//! the file name is `config.toml`
+//! the file name is `Coppo.toml`
 //! and it should be in the root directory of the Cpp project.
 //!
 //! The configuration file should look like this:
@@ -20,12 +20,12 @@
 #![feature(assert_matches)]
 #![allow(clippy::should_implement_trait)]
 
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 use std::collections::HashMap;
 use std::fs;
 
 /// configuration file name
-pub const CONFIG_FILE: &str = "config.toml";
+pub const CONFIG_FILE: &str = "Coppo.toml";
 
 /// Any error that can occur while parsing the configuration file.
 type E = Box<dyn std::error::Error>;
@@ -44,7 +44,7 @@ type E = Box<dyn std::error::Error>;
 ///
 /// [dependencies]
 /// ```
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Config {
     pub project: Project,
     pub dependencies: HashMap<String, Dependency>,
@@ -59,7 +59,7 @@ pub struct Config {
 /// - `description`: The description of the project.
 /// - `license`: The license of the project.
 /// - `repository`: The repository of the project.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Project {
     /// The name of the project.
     /// It defaults to the name of the directory.
@@ -86,7 +86,7 @@ pub struct Project {
 /// It contains the following fields:
 /// - `name`: The name of the dependency.
 /// - `version`: The version of the dependency.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Dependency {
     /// The name of the dependency.
     /// It should be the same as the name of the project.
@@ -97,7 +97,7 @@ pub struct Dependency {
 }
 
 impl Config {
-    /// Parse the configuration file `config.toml` in the root directory of the project.
+    /// Parse the configuration file `Coppo.toml` in the root directory of the project.
     pub fn from_file() -> Result<Config, E> {
         let config_file = fs::read_to_string(CONFIG_FILE)?;
 
@@ -132,6 +132,13 @@ impl Config {
         toml::from_str(config_str).map_err(Into::into)
     }
 }
+
+
+pub mod prelude {
+    pub use super::{Config, Dependency, Project, CONFIG_FILE};
+    pub use toml;
+}
+
 
 #[cfg(test)]
 mod test {
