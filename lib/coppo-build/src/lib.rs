@@ -14,6 +14,8 @@ use std::process;
 use coppo_addons::prelude::*;
 use coppo_logger::prelude::*;
 
+type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
+
 /// The compile output will be stored in the `target` directory.
 pub const COMPILE_OUTPUT: &str = "target";
 
@@ -35,39 +37,73 @@ impl_addon! {
     name => "build",
     description => "Compile the current project",
     run => |config, matches| {
-        info!("Building the project...");
+        build(config, matches)?;
+    }
+}
 
-        // Check if the project has a `Coppo.toml` file.
-        if !Config::exists() {
-            return Err("The project does not have a `Coppo.toml` file.".into());
-        }
+pub struct CoppoRunAddon;
 
-        // Check if the configuration have the project name and version.
-        if config.is_empty() {
-            return Err("The project name and version is needed".into());
-        }
+impl_addon! {
+    CoppoRunAddon,
+    name => "run",
+    description => "Compile and run the current project",
+    run => |config, matches| {
+        build(config, matches)?;
 
-        // Check if the `src/main.cpp` file exists.
-        if !Path::new("src/main.cpp").exists() {
-            return Err("The `src/main.cpp` file does not exist.".into());
-        }
+        info!("Running the project...");
 
-        // Create the `target` directory if it does not exist.
-        if !Path::new(COMPILE_OUTPUT).exists() {
-            fs::create_dir(COMPILE_OUTPUT)?;
-        }
-
-        // Compile the project,
-        // And store the output in the `target` directory.
-        let output = process::Command::new(COMPILER)
-            .args(&["src/main.cpp", "-o", &format!("{}/{}", COMPILE_OUTPUT, config.project.name)])
+        let output = process::Command::new(&format!("{}/{}", COMPILE_OUTPUT, config.project.name))
             .output()?;
 
         if output.status.success() {
-            success!("The project has been built successfully.");
+            success!("The project has been run successfully.");
         } else {
-            error!("The project failed to build.");
+            error!("The project failed to run.");
             error!("{}", String::from_utf8_lossy(&output.stderr));
         }
     }
+}
+
+fn build(config: &mut Config, _matches: &ArgMatches) -> Result<()> {
+    info!("Building the project...");
+
+    // Check if the project has a `Coppo.toml` file.
+    if !Config::exists() {
+        return Err("The project does not have a `Coppo.toml` file.".into());
+    }
+
+    // Check if the configuration have the project name and version.
+    if config.is_empty() {
+        return Err("The project name and version is needed".into());
+    }
+
+    // Check if the `src/main.cpp` file exists.
+    if !Path::new("src/main.cpp").exists() {
+        return Err("The `src/main.cpp` file does not exist.".into());
+    }
+
+    // Create the `target` directory if it does not exist.
+    if !Path::new(COMPILE_OUTPUT).exists() {
+        fs::create_dir(COMPILE_OUTPUT)?;
+    }
+
+    // Compile the project,
+    // And store the output in the `target` directory.
+    let bin_name = if cfg!(windows) {
+        format!("{}/{}.exe", COMPILE_OUTPUT, config.project.name)
+    } else {
+        format!("{}/{}", COMPILE_OUTPUT, config.project.name)
+    };
+    let output = process::Command::new(COMPILER)
+        .args(&["src/main.cpp", "-o", &bin_name])
+        .output()?;
+
+    if output.status.success() {
+        success!("The project has been built successfully.");
+    } else {
+        error!("The project failed to build.");
+        error!("{}", String::from_utf8_lossy(&output.stderr));
+    }
+
+    Ok(())
 }
