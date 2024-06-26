@@ -10,7 +10,7 @@ const DELIMITER: char = if cfg!(windows) { '\\' } else { '/' };
 
 fn main() -> Result<()> {
     if cfg!(debug_assertions) {
-        println!("cargo:rerun-if-changed=build.rs");
+        // if the build script is in debug mode, do nothing.
     } else {
         // if the build script is not in debug mode, build the project.
         // and copy the binary to the `~/.coppo/bin` directory.

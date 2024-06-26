@@ -33,14 +33,14 @@ impl CoppoCli {
 
     /// Add an add-on to the `CoppoCli`.
     /// # Example
-    /// ```no_run
+    /// ```ignore
     /// use coppo_cli::CoppoCli;
     /// use coppo_addons::prelude::*;
     /// use your_addon::YourAddon;
     ///
-    /// CoppoCli::new()
+    /// CoppoCli::new(command!())
     ///     .add_addon(YourAddon)
-    ///     .run(command!());
+    ///     .run();
     /// ```
     ///
     pub fn add_addon<A: Addon + 'static>(&mut self, addon: A) -> &mut Self {
@@ -51,15 +51,15 @@ impl CoppoCli {
     /// Add add-ons to the `CoppoCli`.
     /// Using the `addons!` macro to add multiple add-ons is recommended.
     /// # Example
-    /// ```no_run
+    /// ```ignore
     /// use coppo_cli::CoppoCli;
     /// use coppo_addons::prelude::*;
     /// use your_addon::YourAddon;
     /// use other_addon::OtherAddon;
     ///
-    /// CoppoCli::new()
+    /// CoppoCli::new(command!())
     ///     .add_addons(addons![YourAddon, OtherAddon])
-    ///     .run(command!());
+    ///     .run();
     /// ```
     ///
     pub fn add_addons(&mut self, addons: Addons) -> &mut Self {
@@ -72,11 +72,11 @@ impl CoppoCli {
     /// the `command` arg is the main command of the CLI.
     /// you can use the `command!` macro to create the main command.
     /// # Example
-    /// ```rust
+    /// ```no_run
     /// use coppo_cli::CoppoCli;
     /// use coppo_addons::prelude::*;
     ///
-    /// CoppoCli::new().run(command!());
+    /// CoppoCli::new(command!()).run();
     /// ```
     ///
     pub fn run(&mut self) {

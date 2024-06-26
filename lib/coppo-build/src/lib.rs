@@ -52,15 +52,9 @@ impl_addon! {
 
         info!("Running the project...");
 
-        let output = process::Command::new(&format!("{}/{}", COMPILE_OUTPUT, config.project.name))
-            .output()?;
-
-        if output.status.success() {
-            success!("The project has been run successfully.");
-        } else {
-            error!("The project failed to run.");
-            error!("{}", String::from_utf8_lossy(&output.stderr));
-        }
+        let mut subprocess = process::Command::new(&format!("{}/{}", COMPILE_OUTPUT, config.project.name))
+            .spawn()?;
+        subprocess.wait()?;
     }
 }
 
@@ -100,10 +94,9 @@ fn build(config: &mut Config, _matches: &ArgMatches) -> Result<()> {
 
     if output.status.success() {
         success!("The project has been built successfully.");
+        Ok(())
     } else {
         error!("The project failed to build.");
-        error!("{}", String::from_utf8_lossy(&output.stderr));
+        Err(String::from_utf8_lossy(&output.stderr).into())
     }
-
-    Ok(())
 }

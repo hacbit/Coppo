@@ -22,3 +22,9 @@ coppo-build = { path = "lib/coppo-build" }
 
 [build-dependencies]
 dirs = "5.0.1"
+
+[tasks.build]
+script = [
+    "cargo build --release",
+    "cargo run --manifest-path build.rs",
+]
