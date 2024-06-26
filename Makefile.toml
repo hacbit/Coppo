@@ -1,0 +1,5 @@
+[tasks.build-and-run]
+script = [
+    "cargo build --release",
+    "cargo run --manifest-path build.rs",
+]
