@@ -20,7 +20,7 @@
 #![feature(assert_matches)]
 #![allow(clippy::should_implement_trait)]
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 
@@ -133,12 +133,10 @@ impl Config {
     }
 }
 
-
 pub mod prelude {
     pub use super::{Config, Dependency, Project, CONFIG_FILE};
     pub use toml;
 }
-
 
 #[cfg(test)]
 mod test {

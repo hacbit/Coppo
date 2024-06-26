@@ -16,14 +16,20 @@ pub type Addons = Vec<Box<dyn Addon>>;
 /// And then add the add-ons to the Coppo CLI by calling the `add_addon` or `add_addons` method.
 pub struct CoppoCli {
     addons: Addons,
+    command: Command,
+    quiet: bool,
 }
 
 /// The `CoppoCli` implementation.
 impl CoppoCli {
     /// Create a new `CoppoCli`.
     /// But `Default` is not implemented for `CoppoCli`.
-    pub fn new() -> Self {
-        Self { addons: vec![] }
+    pub fn new(command: Command) -> Self {
+        Self {
+            addons: vec![],
+            command,
+            quiet: false,
+        }
     }
 
     /// Add an add-on to the `CoppoCli`.
@@ -74,27 +80,36 @@ impl CoppoCli {
     /// CoppoCli::new().run(command!());
     /// ```
     ///
-    pub fn run(&self, mut command: Command) {
-        for addon in self.addons.iter() {
-            command = command.subcommand(
+    pub fn run(&mut self) {
+        self.command = self
+            .command
+            .clone()
+            .after_help("See 'coppo help <command>' for more information on a specific command.")
+            .subcommands(self.addons.iter().map(|addon| {
                 Command::new(addon.name())
                     .version(addon.version())
                     .args(addon.args())
-                    .about(addon.description().unwrap_or("")),
-            )
-        }
+                    .about(addon.description().unwrap_or(""))
+            }));
 
-        let matches = command.get_matches();
+        let matches = self.command.clone().get_matches();
         let mut config = Config::from_file().unwrap_or_default();
 
-        for addon in self.addons.iter() {
-            if let Some((name, matches)) = matches.subcommand() {
+        if let Some((name, matches)) = matches.subcommand() {
+            for addon in self.addons.iter() {
                 if name == addon.name() {
                     if let Err(e) = addon.run(&mut config, matches) {
                         eprintln!("Error: {}", e);
                     }
                 }
             }
+        } else {
+            // No subcommand was used.
+            // Print the help message.
+            if let Err(e) = self.command.print_help() {
+                eprintln!("Error: {}", e);
+            }
+            println!();
         }
     }
 }
@@ -114,4 +129,17 @@ macro_rules! addons {
             )*
         ]
     };
+}
+
+/// Some built-in arguments for the Coppo CLI.
+impl CoppoCli {
+    pub fn invoke_builtin(&mut self) -> &mut Self {
+        self.command = self
+            .command
+            .clone()
+            .args(&[
+                arg!(-q --quiet "Do not print Coppo log messages"),
+            ]);
+        self
+    }
 }

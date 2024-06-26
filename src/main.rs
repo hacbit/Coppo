@@ -9,7 +9,8 @@ use coppo_cli::{addons, command, CoppoCli};
 use coppo_new::CoppoNewAddon;
 
 fn main() {
-    CoppoCli::new()
+    CoppoCli::new(command!())
+        .invoke_builtin()
         .add_addons(addons![CoppoNewAddon])
-        .run(command!())
+        .run()
 }
