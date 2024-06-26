@@ -1,3 +1,11 @@
+//! A simple logger for Coppo.
+//! # Example
+//! ```rust
+//! use coppo_logger::prelude::*;
+//!
+//! success!("This is a success message");
+//! ```
+
 #![forbid(unsafe_code)]
 
 use std::sync::OnceLock;

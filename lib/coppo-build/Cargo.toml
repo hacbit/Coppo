@@ -5,3 +5,4 @@ edition = "2021"
 
 [dependencies]
 coppo-addons = { path = "../coppo-addons" }
+coppo-logger = { path = "../coppo-logger" }

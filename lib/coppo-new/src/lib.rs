@@ -1,3 +1,11 @@
+//! The `Coppo new` add-on.
+//! This add-on is used to create a new Cpp project.
+//!
+//! Usage:
+//! ```sh
+//! coppo new <path> [options]
+//! ```
+
 #![forbid(unsafe_code)]
 
 use std::{fs, path::PathBuf};
@@ -18,6 +26,14 @@ pub struct CoppoNew {
     pub name: String,
 }
 
+/// The `Coppo new` add-on.
+/// Create a new project.
+/// The project will be created in the specified directory.
+/// If the name of the project is not specified, the name of the project will be same as the name of the directory.
+/// It will create the following files:
+/// - src/main.cpp
+/// - Coppo.toml
+/// - .gitignore
 pub struct CoppoNewAddon;
 
 impl_addon! {

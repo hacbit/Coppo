@@ -116,6 +116,7 @@ name = "coppo-build"
 version = "0.0.1-alpha"
 dependencies = [
  "coppo-addons",
+ "coppo-logger",
 ]
 
 [[package]]
