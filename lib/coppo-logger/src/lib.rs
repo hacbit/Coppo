@@ -1,3 +1,5 @@
+#![forbid(unsafe_code)]
+
 use std::sync::OnceLock;
 
 use colored::Colorize;

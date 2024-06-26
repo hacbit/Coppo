@@ -1,3 +1,5 @@
+#![forbid(unsafe_code)]
+
 use coppo_addons::prelude::*;
 
 pub struct CoppoBuildAddon;
