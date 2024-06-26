@@ -5,11 +5,12 @@
 #![forbid(unsafe_code)]
 #![allow(unused_imports)]
 
+use coppo_build::CoppoBuildAddon;
 use coppo_cli::{addons, command, CoppoCli};
 use coppo_new::CoppoNewAddon;
 
 fn main() {
     CoppoCli::new(command!())
-        .add_addons(addons![CoppoNewAddon])
+        .add_addons(addons![CoppoNewAddon, CoppoBuildAddon])
         .run()
 }

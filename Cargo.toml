@@ -8,11 +8,14 @@ license = "MIT"
 [workspace]
 members = [
     "lib/coppo-addons",
+    "lib/coppo-build",
     "lib/coppo-cli",
-    "lib/coppo-config", "lib/coppo-logger",
+    "lib/coppo-config",
+    "lib/coppo-logger",
     "lib/coppo-new",
 ]
 
 [dependencies]
 coppo-cli = { path = "lib/coppo-cli" }
 coppo-new = { path = "lib/coppo-new" }
+coppo-build = { path = "lib/coppo-build" }
