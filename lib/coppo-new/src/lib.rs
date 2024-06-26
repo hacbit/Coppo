@@ -4,6 +4,7 @@ use std::{fs, path::PathBuf};
 
 use coppo_addons::prelude::*;
 use coppo_config::prelude::*;
+use coppo_logger::prelude::*;
 
 /// The `Coppo new` command options.
 #[derive(Debug, Default)]
@@ -67,7 +68,7 @@ impl_addon! {
         fs::write(new.path.join(".gitignore"), GITIGNORE)?;
 
         // Print the success message.
-        println!("Created a new project at {}", new.path.canonicalize()?.display());
+        success!("Created a new project at {}", new.path.canonicalize()?.display());
     }
 }
 

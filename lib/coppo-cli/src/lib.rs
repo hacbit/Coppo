@@ -7,6 +7,7 @@
 #![allow(clippy::new_without_default)]
 
 pub use coppo_addons::prelude::*;
+use coppo_logger::prelude::*;
 
 /// The packings of the add-ons.
 pub type Addons = Vec<Box<dyn Addon>>;
@@ -17,7 +18,6 @@ pub type Addons = Vec<Box<dyn Addon>>;
 pub struct CoppoCli {
     addons: Addons,
     command: Command,
-    quiet: bool,
 }
 
 /// The `CoppoCli` implementation.
@@ -28,7 +28,6 @@ impl CoppoCli {
         Self {
             addons: vec![],
             command,
-            quiet: false,
         }
     }
 
@@ -84,9 +83,19 @@ impl CoppoCli {
         self.command = self
             .command
             .clone()
-            .args(&[
-                arg!(-q --quiet "Do not print Coppo log messages"),
-            ])
+            .args(&[arg!(-q --quiet "Do not print Coppo log messages")
+                .action(ArgAction::SetTrue)
+                .value_parser(value_parser!(bool))])
+            .about("Cpp package manager")
+            .help_template(
+                "{before-help}{about-with-newline}\n\
+                {usage-heading} {usage}\n\n\
+                Options:\n\
+                {options}\n\n\
+                Commands:\n\
+                {subcommands}\n\
+                {after-help}"
+            )
             .after_help("See 'coppo help <command>' for more information on a specific command.")
             .subcommands(self.addons.iter().map(|addon| {
                 Command::new(addon.name())
@@ -98,21 +107,17 @@ impl CoppoCli {
         let matches = self.command.clone().get_matches();
         let mut config = Config::from_file().unwrap_or_default();
 
+        // If the user specifies the `--quiet` flag, the logger will not output messages.
+        init_logger(*matches.get_one::<bool>("quiet").unwrap_or(&false));
+
         if let Some((name, matches)) = matches.subcommand() {
             for addon in self.addons.iter() {
                 if name == addon.name() {
                     if let Err(e) = addon.run(&mut config, matches) {
-                        eprintln!("Error: {}", e);
+                        error!("{}", e);
                     }
                 }
             }
-        } else {
-            // No subcommand was used.
-            // Print the help message.
-            if let Err(e) = self.command.print_help() {
-                eprintln!("Error: {}", e);
-            }
-            println!();
         }
     }
 }

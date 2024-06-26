@@ -9,7 +9,7 @@ license = "MIT"
 members = [
     "lib/coppo-addons",
     "lib/coppo-cli",
-    "lib/coppo-config",
+    "lib/coppo-config", "lib/coppo-logger",
     "lib/coppo-new",
 ]
 

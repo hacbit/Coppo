@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 coppo-addons = { path = "../coppo-addons" }
 coppo-config = { path = "../coppo-config" }
+coppo-logger = { path = "../coppo-logger" }
