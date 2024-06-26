@@ -97,6 +97,17 @@ pub struct Dependency {
 }
 
 impl Config {
+    /// Check if the configuration file exists.
+    pub fn exists() -> bool {
+        fs::metadata(CONFIG_FILE).is_ok()
+    }
+
+    /// Check if the configuration is empty.
+    /// It will return `true` if the project name and version are empty.
+    pub fn is_empty(&self) -> bool {
+        self.project.name.is_empty() && self.project.version.is_empty()
+    }
+
     /// Parse the configuration file `Coppo.toml` in the root directory of the project.
     pub fn from_file() -> Result<Config, E> {
         let config_file = fs::read_to_string(CONFIG_FILE)?;

@@ -74,7 +74,7 @@ pub fn init_logger(quite: bool) {
 
 /// The global logger for Coppo.
 /// You can use this logger to output messages.
-/// 
+///
 /// Use the `info!`, `warn!`, `error!`, and `success!` macros to output messages is recommended.
 /// These macros will automatically initialize the global logger if it has not been initialized.
 /// They are wrappers around the `LOGGER` global variable.
