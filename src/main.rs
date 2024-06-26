@@ -10,7 +10,6 @@ use coppo_new::CoppoNewAddon;
 
 fn main() {
     CoppoCli::new(command!())
-        .invoke_builtin()
         .add_addons(addons![CoppoNewAddon])
         .run()
 }

@@ -84,6 +84,9 @@ impl CoppoCli {
         self.command = self
             .command
             .clone()
+            .args(&[
+                arg!(-q --quiet "Do not print Coppo log messages"),
+            ])
             .after_help("See 'coppo help <command>' for more information on a specific command.")
             .subcommands(self.addons.iter().map(|addon| {
                 Command::new(addon.name())
@@ -129,17 +132,4 @@ macro_rules! addons {
             )*
         ]
     };
-}
-
-/// Some built-in arguments for the Coppo CLI.
-impl CoppoCli {
-    pub fn invoke_builtin(&mut self) -> &mut Self {
-        self.command = self
-            .command
-            .clone()
-            .args(&[
-                arg!(-q --quiet "Do not print Coppo log messages"),
-            ]);
-        self
-    }
 }
