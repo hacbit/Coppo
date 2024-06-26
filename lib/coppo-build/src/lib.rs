@@ -48,11 +48,20 @@ impl_addon! {
     name => "run",
     description => "Compile and run the current project",
     run => |config, matches| {
-        build(config, matches)?;
+        let bin_name = if cfg!(windows) {
+            format!("{}/{}.exe", COMPILE_OUTPUT, config.project.name)
+        } else {
+            format!("{}/{}", COMPILE_OUTPUT, config.project.name)
+        };
+
+        // Check if the output binary exists.
+        if !Path::new(&bin_name).exists() {
+            build(config, matches)?;
+        }
 
         info!("Running the project...");
 
-        let mut subprocess = process::Command::new(&format!("{}/{}", COMPILE_OUTPUT, config.project.name))
+        let mut subprocess = process::Command::new(&bin_name)
             .spawn()?;
         subprocess.wait()?;
     }
@@ -93,7 +102,7 @@ fn build(config: &mut Config, _matches: &ArgMatches) -> Result<()> {
         .output()?;
 
     if output.status.success() {
-        success!("The project has been built successfully.");
+        success!("The project has been built.");
         Ok(())
     } else {
         error!("The project failed to build.");
