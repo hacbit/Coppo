@@ -37,7 +37,7 @@ impl Logger {
     /// Output an info message with the `bright_blue` color.
     pub fn info(&self, message: &str) {
         if !self.quiet {
-            println!("{}", message.bright_blue());
+            println!("{}", message.bright_cyan());
         }
     }
 
