@@ -16,13 +16,10 @@ pub struct CoppoNew {
 
 pub struct CoppoNewAddon;
 
-impl Addon for CoppoNewAddon {
-    fn name(&self) -> String {
-        "new".to_string()
-    }
-
-    fn run(&self, _config: &mut Config) -> AddonResult {
-        println!("Coppo new command is running...");
-        Ok(())
+impl_addon! {
+    CoppoNewAddon,
+    name => "new",
+    run => |config, matches| {
+        println!("Coppo new add-on is running...");
     }
 }
