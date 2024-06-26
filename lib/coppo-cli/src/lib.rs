@@ -94,7 +94,7 @@ impl CoppoCli {
                 {options}\n\n\
                 Commands:\n\
                 {subcommands}\n\
-                {after-help}"
+                {after-help}",
             )
             .after_help("See 'coppo help <command>' for more information on a specific command.")
             .subcommands(self.addons.iter().map(|addon| {

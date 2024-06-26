@@ -99,8 +99,8 @@ macro_rules! success {
 }
 
 pub mod prelude {
-    pub use crate::{LOGGER, Logger, init_logger};
     pub use crate::{error, info, success, warn};
+    pub use crate::{init_logger, Logger, LOGGER};
 }
 
 #[cfg(test)]
@@ -109,10 +109,9 @@ mod test {
 
     #[test]
     fn test_logger() {
-        let logger = Logger::new(false);
-        logger.info("This is an info message");
-        logger.warn("This is a warning message");
-        logger.error("This is an error message");
-        logger.success("This is a success message");
+        info!("This is an info message");
+        warn!("This is a warning message");
+        error!("This is an error message");
+        success!("This is a success message");
     }
 }
