@@ -19,3 +19,6 @@ members = [
 coppo-cli = { path = "lib/coppo-cli" }
 coppo-new = { path = "lib/coppo-new" }
 coppo-build = { path = "lib/coppo-build" }
+
+[build-dependencies]
+dirs = "5.0.1"
