@@ -74,9 +74,14 @@ pub fn init_logger(quite: bool) {
 
 /// The global logger for Coppo.
 /// You can use this logger to output messages.
+/// 
+/// Use the `info!`, `warn!`, `error!`, and `success!` macros to output messages is recommended.
+/// These macros will automatically initialize the global logger if it has not been initialized.
+/// They are wrappers around the `LOGGER` global variable.
 pub static LOGGER: OnceLock<Logger> = OnceLock::new();
 
 /// Output an info message with the `bright_blue` color.
+/// It use the global logger for Coppo.
 #[macro_export]
 macro_rules! info {
     ($( $arg:expr ),*) => {
@@ -85,6 +90,7 @@ macro_rules! info {
 }
 
 /// Output a warning message with the `bright_yellow` color.
+/// It use the global logger for Coppo.
 #[macro_export]
 macro_rules! warn {
     ($( $arg:expr ),*) => {
@@ -93,6 +99,7 @@ macro_rules! warn {
 }
 
 /// Output an error message with the `bright_red` color.
+/// It use the global logger for Coppo.
 #[macro_export]
 macro_rules! error {
     ($( $arg:expr ),*) => {
@@ -101,6 +108,7 @@ macro_rules! error {
 }
 
 /// Output a success message with the `bright_green` color.
+/// It use the global logger for Coppo.
 #[macro_export]
 macro_rules! success {
     ($( $arg:expr ),*) => {
