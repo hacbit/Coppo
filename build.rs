@@ -70,14 +70,17 @@ fn build() -> Result<()> {
 
     // Write configuration file.
     let config_file = coppo_dir.join("config.toml");
-    fs::write(
-        &config_file,
-        "\
-        [linker]\n\
-        compiler = \"clang++\"\n\
-        ",
-    )
-    .map_err(|e| format!("Failed to write the configuration file: {}", e))?;
+
+    if !config_file.exists() {
+        fs::write(
+            &config_file,
+            "\
+            [linker]\n\
+            compiler = \"clang++\"\n\
+            ",
+        )
+        .map_err(|e| format!("Failed to write the configuration file: {}", e))?;
+    }
 
     Ok(())
 }
